@@ -5,6 +5,7 @@ import io.hexlet.project_devops_deploy.dto.BulletinRequest;
 import io.hexlet.project_devops_deploy.service.BulletinService;
 import jakarta.validation.Valid;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,22 +21,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api")
 public class BulletinController {
 
-    private final BulletinService service;
+    private BulletinService service;
 
-    public BulletinController(BulletinService service) {
+    @Autowired
+    public void setService(BulletinService service) {
         this.service = service;
     }
 
-    @PostMapping("/bulletins2")
+    @PostMapping("/bulletins")
     @ResponseStatus(HttpStatus.CREATED)
     public BulletinDto create(@Valid @RequestBody BulletinRequest request) {
         return service.create(request);
-    }
-
-    @DeleteMapping("/bulletins/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long id) {
-        service.delete(id);
     }
 
     @GetMapping("/bulletins")
@@ -51,5 +47,12 @@ public class BulletinController {
     @PutMapping("/bulletins/{id}")
     public BulletinDto update(@PathVariable Long id, @Valid @RequestBody BulletinRequest request) {
         return service.update(id, request);
+    }
+
+
+    @DeleteMapping("/bulletins/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) {
+        service.delete(id);
     }
 }

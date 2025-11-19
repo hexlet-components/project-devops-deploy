@@ -52,6 +52,7 @@ dependencies {
     testImplementation(libs.junitJupiter)
     testRuntimeOnly(libs.junitPlatformLauncher)
     runtimeOnly("com.h2database:h2")
+    runtimeOnly(libs.postgresql)
 
     implementation(libs.jacksonDatabindNullable)
     implementation(libs.datafaker)
@@ -60,7 +61,7 @@ dependencies {
 tasks.test {
     useJUnitPlatform()
     testLogging {
-        exceptionFormat = TestExceptionFormat.FULL
+        exceptionFormat = TestExceptionFormat.SHORT
         events = setOf(
             TestLogEvent.FAILED,
             TestLogEvent.PASSED,

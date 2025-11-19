@@ -40,8 +40,14 @@ class BulletinControllerTest {
     @Autowired
     private BulletinRepository bulletinRepository;
 
+
+    @BeforeEach
+    void setup() {
+        bulletinRepository.deleteAll();
+    }
+
     @Test
-    void create() throws Exception {
+    void testCreate() throws Exception {
         BulletinRequest request = BulletinRequest.builder().title("Create title").description("Create description")
                 .state(BulletinState.DRAFT).contact("create@example.com").build();
 
@@ -53,18 +59,13 @@ class BulletinControllerTest {
     }
 
     @Test
-    void index() throws Exception {
+    void testIndex() throws Exception {
         mockMvc.perform(get("/api/bulletins")).andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(greaterThanOrEqualTo(0))));
     }
 
-    @BeforeEach
-    void setup() {
-        bulletinRepository.deleteAll();
-    }
-
     @Test
-    void show() throws Exception {
+    void testShow() throws Exception {
         var bulletin = bulletinRepository.save(modelGenerator.generateBulletin());
 
         mockMvc.perform(get("/api/bulletins/" + bulletin.getId())).andExpect(status().isOk())
@@ -73,7 +74,7 @@ class BulletinControllerTest {
     }
 
     @Test
-    void update() throws Exception {
+    void testUpdate() throws Exception {
         var bulletin = bulletinRepository.save(modelGenerator.generateBulletin());
 
         BulletinRequest request = BulletinRequest.builder().title("Updated title").description("Updated description")
@@ -86,11 +87,10 @@ class BulletinControllerTest {
     }
 
     @Test
-    void delete() throws Exception {
+    void testDelete() throws Exception {
         var bulletin = bulletinRepository.save(modelGenerator.generateBulletin());
 
         mockMvc.perform(delete("/api/bulletins/" + bulletin.getId())).andExpect(status().isNoContent());
-
         mockMvc.perform(get("/api/bulletins/" + bulletin.getId())).andExpect(status().isNotFound());
     }
 }
