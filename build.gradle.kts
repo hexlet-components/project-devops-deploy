@@ -32,7 +32,6 @@ dependencies {
     implementation(libs.springBootStarterWeb)
     implementation(libs.springBootStarterDataJpa)
     implementation(libs.springBootStarterValidation)
-    implementation("org.flywaydb:flyway-core")
     implementation(libs.mapstruct)
     implementation(libs.instancioCore)
     implementation(libs.springdocOpenapi)
