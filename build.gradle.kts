@@ -1,3 +1,6 @@
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.gradle.api.tasks.testing.logging.TestLogEvent
+
 plugins {
     application
     alias(libs.plugins.versions)
@@ -32,6 +35,8 @@ dependencies {
     implementation("org.flywaydb:flyway-core")
     implementation(libs.mapstruct)
     implementation(libs.instancioCore)
+    implementation(libs.springdocOpenapi)
+    developmentOnly(libs.springBootDevtools)
     annotationProcessor(libs.mapstructProcessor)
     compileOnly(libs.lombok)
     annotationProcessor(libs.lombok)
@@ -41,7 +46,6 @@ dependencies {
     testAnnotationProcessor(libs.lombokMapstructBinding)
     // implementation "org.springframework.boot:spring-boot-starter"
     // testImplementation "org.springframework.boot:spring-boot-starter-test"
-    // testRuntimeOnly "org.junit.platform:junit-platform-launcher"
     testImplementation(libs.springBootStarterTest)
     testImplementation(libs.springSecurityTest)
     testImplementation(platform(libs.junitBom))
@@ -55,6 +59,15 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+    testLogging {
+        exceptionFormat = TestExceptionFormat.FULL
+        events = setOf(
+            TestLogEvent.FAILED,
+            TestLogEvent.PASSED,
+            TestLogEvent.SKIPPED
+        )
+        showStandardStreams = true
+    }
 }
 
 spotless {

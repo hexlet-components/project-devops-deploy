@@ -44,7 +44,7 @@ shadow-plugin = "9.1.0"
 spotless-plugin = "8.0.0"
 
 jackson-databind-nullable = "0.2.7"
-# springdoc-openapi-ui = "2.8.13"
+springdoc-openapi-ui = "2.8.13"
 # commons-lang3 = "3.18.0"
 datafaker = "2.4.4"
 # instancio-junit = "5.5.1"
@@ -81,3 +81,4 @@ lombokMapstructBinding = { module = "org.projectlombok:lombok-mapstruct-binding"
 jacksonDatabindNullable = { module = "org.openapitools:jackson-databind-nullable", version.ref = "jackson-databind-nullable" }
 datafaker = { module = "net.datafaker:datafaker", version.ref = "datafaker" }
 instancioCore = { module = "org.instancio:instancio-core", version.ref = "instancio" }
+springdocOpenapi = { module = "org.springdoc:springdoc-openapi-starter-webmvc-ui", version.ref = "springdoc-openapi-ui" }

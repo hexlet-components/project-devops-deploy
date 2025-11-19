@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/bulletins")
+@RequestMapping("/api")
 public class BulletinController {
 
     private final BulletinService service;
@@ -26,29 +26,29 @@ public class BulletinController {
         this.service = service;
     }
 
-    @PostMapping
+    @PostMapping("/bulletins2")
     @ResponseStatus(HttpStatus.CREATED)
     public BulletinDto create(@Valid @RequestBody BulletinRequest request) {
         return service.create(request);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/bulletins/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         service.delete(id);
     }
 
-    @GetMapping
+    @GetMapping("/bulletins")
     public List<BulletinDto> index() {
         return service.findAll();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/bulletins/{id}")
     public BulletinDto show(@PathVariable Long id) {
         return service.findById(id);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/bulletins/{id}")
     public BulletinDto update(@PathVariable Long id, @Valid @RequestBody BulletinRequest request) {
         return service.update(id, request);
     }

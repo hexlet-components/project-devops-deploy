@@ -21,8 +21,7 @@ public class DataInitializer {
 
     @PostConstruct
     public void seedData() {
-        IntStream.range(0, BULLETIN_SEED_COUNT)
-                .mapToObj(i -> modelGenerator.generateBulletin())
+        IntStream.range(0, BULLETIN_SEED_COUNT).mapToObj(i -> modelGenerator.generateBulletin())
                 .forEach(repository::save);
     }
 }

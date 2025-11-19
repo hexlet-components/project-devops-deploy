@@ -4,7 +4,7 @@ test:
 start: run
 
 run:
-	./gradlew run
+	./gradlew bootRun
 
 update-gradle:
 	./gradlew wrapper --gradle-version 9.2.1

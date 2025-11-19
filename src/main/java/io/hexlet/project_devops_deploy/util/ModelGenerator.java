@@ -21,18 +21,16 @@ public class ModelGenerator {
         this.faker = faker;
     }
 
+    public Bulletin generateBulletin() {
+        return Instancio.of(bulletinModel).create();
+    }
+
     @PostConstruct
     private void init() {
-        bulletinModel = Instancio.of(Bulletin.class)
-                .ignore(Select.field(Bulletin::getId))
+        bulletinModel = Instancio.of(Bulletin.class).ignore(Select.field(Bulletin::getId))
                 .supply(Select.field(Bulletin::getTitle), () -> faker.book().title())
                 .supply(Select.field(Bulletin::getDescription), () -> faker.lorem().paragraph(3))
                 .supply(Select.field(Bulletin::getState), () -> faker.options().option(BulletinState.values()))
-                .supply(Select.field(Bulletin::getContact), () -> faker.phoneNumber().phoneNumber())
-                .toModel();
-    }
-
-    public Bulletin generateBulletin() {
-        return Instancio.of(bulletinModel).create();
+                .supply(Select.field(Bulletin::getContact), () -> faker.phoneNumber().phoneNumber()).toModel();
     }
 }
