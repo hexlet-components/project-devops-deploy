@@ -1,7 +1,7 @@
 package io.hexlet.project_devops_deploy.util;
 
 import io.hexlet.project_devops_deploy.model.Bulletin;
-import io.hexlet.project_devops_deploy.model.BulletinState;
+import io.hexlet.project_devops_deploy.model.bulletin.BulletinState;
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import net.datafaker.Faker;

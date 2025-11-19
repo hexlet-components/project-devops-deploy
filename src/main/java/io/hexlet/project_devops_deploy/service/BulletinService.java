@@ -2,9 +2,9 @@ package io.hexlet.project_devops_deploy.service;
 
 import io.hexlet.project_devops_deploy.dto.BulletinDto;
 import io.hexlet.project_devops_deploy.dto.BulletinRequest;
-import io.hexlet.project_devops_deploy.exception.BulletinNotFoundException;
-import io.hexlet.project_devops_deploy.mapper.BulletinMapper;
+import io.hexlet.project_devops_deploy.exception.ResourceNotFoundException;
 import io.hexlet.project_devops_deploy.model.Bulletin;
+import io.hexlet.project_devops_deploy.mapper.BulletinMapper;
 import io.hexlet.project_devops_deploy.repository.BulletinRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -43,7 +43,7 @@ public class BulletinService {
     }
 
     private Bulletin getBulletin(Long id) {
-        return repository.findById(id).orElseThrow(() -> new BulletinNotFoundException(id));
+        return repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Bulletin has not found"));
     }
 
     public BulletinDto update(Long id, BulletinRequest request) {

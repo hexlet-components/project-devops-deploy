@@ -13,7 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.hexlet.project_devops_deploy.dto.BulletinRequest;
-import io.hexlet.project_devops_deploy.model.BulletinState;
+import io.hexlet.project_devops_deploy.model.bulletin.BulletinState;
 import io.hexlet.project_devops_deploy.repository.BulletinRepository;
 import io.hexlet.project_devops_deploy.util.ModelGenerator;
 import org.junit.jupiter.api.BeforeEach;

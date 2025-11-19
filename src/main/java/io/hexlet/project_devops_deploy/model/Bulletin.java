@@ -9,15 +9,20 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import io.hexlet.project_devops_deploy.model.bulletin.BulletinState;
 import java.time.LocalDateTime;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "bulletins")
 @EntityListeners(AuditingEntityListener.class)
-public class Bulletin {
+public class Bulletin implements BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,59 +49,4 @@ public class Bulletin {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    public String getContact() {
-        return contact;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public BulletinState getState() {
-        return state;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setContact(String contact) {
-        this.contact = contact;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setState(BulletinState state) {
-        this.state = state;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
 }

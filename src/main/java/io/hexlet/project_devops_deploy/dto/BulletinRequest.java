@@ -1,6 +1,6 @@
 package io.hexlet.project_devops_deploy.dto;
 
-import io.hexlet.project_devops_deploy.model.BulletinState;
+import io.hexlet.project_devops_deploy.model.bulletin.BulletinState;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
