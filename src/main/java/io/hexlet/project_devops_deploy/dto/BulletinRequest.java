@@ -1,29 +1,26 @@
 package io.hexlet.project_devops_deploy.dto;
 
+import io.hexlet.project_devops_deploy.model.BulletinState;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import io.hexlet.project_devops_deploy.model.Bulletin;
-import io.hexlet.project_devops_deploy.model.BulletinState;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-public record BulletinRequest(
-        @NotBlank String title,
-        @NotBlank String description,
-        @NotNull BulletinState state,
-        @NotBlank String contact
-) {
-    public Bulletin toEntity() {
-        Bulletin bulletin = new Bulletin();
-        bulletin.setTitle(title);
-        bulletin.setDescription(description);
-        bulletin.setState(state);
-        bulletin.setContact(contact);
-        return bulletin;
-    }
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class BulletinRequest {
 
-    public void updateEntity(Bulletin bulletin) {
-        bulletin.setTitle(title);
-        bulletin.setDescription(description);
-        bulletin.setState(state);
-        bulletin.setContact(contact);
-    }
+    @NotBlank private String title;
+
+    @NotBlank private String description;
+
+    @NotNull private BulletinState state;
+
+    @NotBlank private String contact;
 }

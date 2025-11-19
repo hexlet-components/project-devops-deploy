@@ -17,3 +17,9 @@ install:
 
 build:
 	./gradlew build
+
+lint:
+	./gradlew spotlessCheck
+
+lint-fix:
+	./gradlew spotlessApply

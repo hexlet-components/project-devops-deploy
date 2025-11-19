@@ -30,43 +30,43 @@ public class Bulletin {
     @Column(nullable = false)
     private String contact;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
+    public String getContact() {
+        return contact;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public Long getId() {
+        return id;
     }
 
     public BulletinState getState() {
         return state;
     }
 
-    public void setState(BulletinState state) {
-        this.state = state;
-    }
-
-    public String getContact() {
-        return contact;
+    public String getTitle() {
+        return title;
     }
 
     public void setContact(String contact) {
         this.contact = contact;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setState(BulletinState state) {
+        this.state = state;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

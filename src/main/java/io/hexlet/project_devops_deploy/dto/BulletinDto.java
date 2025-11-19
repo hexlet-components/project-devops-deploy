@@ -1,22 +1,22 @@
 package io.hexlet.project_devops_deploy.dto;
 
-import io.hexlet.project_devops_deploy.model.Bulletin;
 import io.hexlet.project_devops_deploy.model.BulletinState;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-public record BulletinDto(
-        Long id,
-        String title,
-        String description,
-        BulletinState state,
-        String contact
-) {
-    public static BulletinDto fromEntity(Bulletin bulletin) {
-        return new BulletinDto(
-                bulletin.getId(),
-                bulletin.getTitle(),
-                bulletin.getDescription(),
-                bulletin.getState(),
-                bulletin.getContact()
-        );
-    }
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class BulletinDto {
+
+    private Long id;
+    private String title;
+    private String description;
+    private BulletinState state;
+    private String contact;
 }

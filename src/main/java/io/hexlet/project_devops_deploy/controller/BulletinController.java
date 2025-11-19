@@ -1,10 +1,10 @@
 package io.hexlet.project_devops_deploy.controller;
 
-import jakarta.validation.Valid;
-import java.util.List;
 import io.hexlet.project_devops_deploy.dto.BulletinDto;
 import io.hexlet.project_devops_deploy.dto.BulletinRequest;
 import io.hexlet.project_devops_deploy.service.BulletinService;
+import jakarta.validation.Valid;
+import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +26,18 @@ public class BulletinController {
         this.service = service;
     }
 
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public BulletinDto create(@Valid @RequestBody BulletinRequest request) {
+        return service.create(request);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) {
+        service.delete(id);
+    }
+
     @GetMapping
     public List<BulletinDto> index() {
         return service.findAll();
@@ -36,20 +48,8 @@ public class BulletinController {
         return service.findById(id);
     }
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public BulletinDto create(@Valid @RequestBody BulletinRequest request) {
-        return service.create(request);
-    }
-
     @PutMapping("/{id}")
     public BulletinDto update(@PathVariable Long id, @Valid @RequestBody BulletinRequest request) {
         return service.update(id, request);
-    }
-
-    @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long id) {
-        service.delete(id);
     }
 }

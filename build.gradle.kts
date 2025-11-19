@@ -29,6 +29,12 @@ dependencies {
     implementation(libs.springBootStarterDataJpa)
     implementation(libs.springBootStarterValidation)
     implementation("org.flywaydb:flyway-core")
+    implementation(libs.mapstruct)
+    annotationProcessor(libs.mapstructProcessor)
+    compileOnly(libs.lombok)
+    annotationProcessor(libs.lombok)
+    testCompileOnly(libs.lombok)
+    testAnnotationProcessor(libs.lombok)
     // implementation "org.springframework.boot:spring-boot-starter"
     // testImplementation "org.springframework.boot:spring-boot-starter-test"
     // testRuntimeOnly "org.junit.platform:junit-platform-launcher"
