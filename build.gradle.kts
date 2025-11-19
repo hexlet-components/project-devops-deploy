@@ -74,7 +74,7 @@ spotless {
     java {
         importOrder()
         removeUnusedImports()
-        eclipse().sortMembersEnabled(true)
+        eclipse()
         formatAnnotations()
         leadingTabsToSpaces(4)
     }

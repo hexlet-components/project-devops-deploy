@@ -1,5 +1,6 @@
 package io.hexlet.project_devops_deploy.model;
 
+import io.hexlet.project_devops_deploy.model.bulletin.BulletinState;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -9,7 +10,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import io.hexlet.project_devops_deploy.model.bulletin.BulletinState;
 import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;

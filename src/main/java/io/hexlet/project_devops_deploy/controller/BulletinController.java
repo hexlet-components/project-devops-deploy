@@ -21,12 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api")
 public class BulletinController {
 
-    private BulletinService service;
-
     @Autowired
-    public void setService(BulletinService service) {
-        this.service = service;
-    }
+    private BulletinService service;
 
     @PostMapping("/bulletins")
     @ResponseStatus(HttpStatus.CREATED)
@@ -48,7 +44,6 @@ public class BulletinController {
     public BulletinDto update(@PathVariable Long id, @Valid @RequestBody BulletinRequest request) {
         return service.update(id, request);
     }
-
 
     @DeleteMapping("/bulletins/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

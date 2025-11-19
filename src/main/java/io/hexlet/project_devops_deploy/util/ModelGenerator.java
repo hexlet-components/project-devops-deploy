@@ -27,14 +27,11 @@ public class ModelGenerator {
 
     @PostConstruct
     private void init() {
-        bulletinModel = Instancio.of(Bulletin.class)
-                .ignore(Select.field(Bulletin::getId))
-                .ignore(Select.field(Bulletin::getCreatedAt))
-                .ignore(Select.field(Bulletin::getUpdatedAt))
+        bulletinModel = Instancio.of(Bulletin.class).ignore(Select.field(Bulletin::getId))
+                .ignore(Select.field(Bulletin::getCreatedAt)).ignore(Select.field(Bulletin::getUpdatedAt))
                 .supply(Select.field(Bulletin::getTitle), () -> faker.book().title())
                 .supply(Select.field(Bulletin::getDescription), () -> faker.lorem().paragraph(3))
                 .supply(Select.field(Bulletin::getState), () -> faker.options().option(BulletinState.values()))
-                .supply(Select.field(Bulletin::getContact), () -> faker.phoneNumber().phoneNumber())
-                .toModel();
+                .supply(Select.field(Bulletin::getContact), () -> faker.phoneNumber().phoneNumber()).toModel();
     }
 }

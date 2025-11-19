@@ -25,8 +25,7 @@ public class DataInitializer implements ApplicationRunner {
             return;
         }
 
-        IntStream.range(0, BULLETIN_SEED_COUNT)
-                .mapToObj(i -> modelGenerator.generateBulletin())
+        IntStream.range(0, BULLETIN_SEED_COUNT).mapToObj(i -> modelGenerator.generateBulletin())
                 .forEach(repository::save);
     }
 }

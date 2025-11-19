@@ -40,7 +40,6 @@ class BulletinControllerTest {
     @Autowired
     private BulletinRepository bulletinRepository;
 
-
     @BeforeEach
     void setup() {
         bulletinRepository.deleteAll();

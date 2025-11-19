@@ -1,6 +1,5 @@
 package io.hexlet.project_devops_deploy.exception;
 
-
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
