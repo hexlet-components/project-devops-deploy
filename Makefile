@@ -1,6 +1,8 @@
 test:
 	./gradlew test
 
+start: run
+
 run:
 	./gradlew run
 
@@ -12,7 +14,6 @@ update-deps:
 
 install:
 	./gradlew dependencies
-
 
 build:
 	./gradlew build

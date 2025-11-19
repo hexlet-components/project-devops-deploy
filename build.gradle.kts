@@ -26,6 +26,9 @@ repositories {
 
 dependencies {
     implementation(libs.springBootStarterWeb)
+    implementation(libs.springBootStarterDataJpa)
+    implementation(libs.springBootStarterValidation)
+    implementation("org.flywaydb:flyway-core")
     // implementation "org.springframework.boot:spring-boot-starter"
     // testImplementation "org.springframework.boot:spring-boot-starter-test"
     // testRuntimeOnly "org.junit.platform:junit-platform-launcher"
@@ -34,6 +37,7 @@ dependencies {
     testImplementation(platform(libs.junitBom))
     testImplementation(libs.junitJupiter)
     testRuntimeOnly(libs.junitPlatformLauncher)
+    runtimeOnly("com.h2database:h2")
 }
 
 tasks.test {
