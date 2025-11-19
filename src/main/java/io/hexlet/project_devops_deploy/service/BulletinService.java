@@ -7,11 +7,14 @@ import io.hexlet.project_devops_deploy.mapper.BulletinMapper;
 import io.hexlet.project_devops_deploy.model.Bulletin;
 import io.hexlet.project_devops_deploy.repository.BulletinRepository;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class BulletinService {
 
     @Autowired
