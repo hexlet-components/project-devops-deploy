@@ -1,0 +1,34 @@
+---
+logging:
+  level:
+    root: INFO
+    org.springframework.boot: INFO
+    org.springframework.web: DEBUG
+    io.hexlet.project_devops_deploy: DEBUG
+
+spring:
+  application:
+    name: demo
+  datasource:
+    url: jdbc:h2:mem:bulletins;DB_CLOSE_DELAY=-1;MODE=PostgreSQL
+    username: sa
+    password: ""
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  flyway:
+    locations: classpath:db/migration
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  output:
+    ansi:
+      enabled: always
+
+server:
+  address: 0.0.0.0

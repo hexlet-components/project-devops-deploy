@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.spotless)
     alias(libs.plugins.spring.boot)
     alias(libs.plugins.spring.dependency.management)
+    alias(libs.plugins.lombok)
 }
 
 group = "com.example"
@@ -30,11 +31,14 @@ dependencies {
     implementation(libs.springBootStarterValidation)
     implementation("org.flywaydb:flyway-core")
     implementation(libs.mapstruct)
+    implementation(libs.instancioCore)
     annotationProcessor(libs.mapstructProcessor)
     compileOnly(libs.lombok)
     annotationProcessor(libs.lombok)
+    annotationProcessor(libs.lombokMapstructBinding)
     testCompileOnly(libs.lombok)
     testAnnotationProcessor(libs.lombok)
+    testAnnotationProcessor(libs.lombokMapstructBinding)
     // implementation "org.springframework.boot:spring-boot-starter"
     // testImplementation "org.springframework.boot:spring-boot-starter-test"
     // testRuntimeOnly "org.junit.platform:junit-platform-launcher"
@@ -44,6 +48,9 @@ dependencies {
     testImplementation(libs.junitJupiter)
     testRuntimeOnly(libs.junitPlatformLauncher)
     runtimeOnly("com.h2database:h2")
+
+    implementation(libs.jacksonDatabindNullable)
+    implementation(libs.datafaker)
 }
 
 tasks.test {

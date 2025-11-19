@@ -23,3 +23,5 @@ lint:
 
 lint-fix:
 	./gradlew spotlessApply
+
+.PHONY: build
