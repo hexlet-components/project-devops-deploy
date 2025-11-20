@@ -12,6 +12,7 @@ API documentation is available via Swagger UI at `http://localhost:8080/swagger-
 - Gradle 9.2.1.
 - PostgreSQL only if you run the `prod` profile with an external database.
 - Make.
+- NodeJS 20+
 
 ## Running
 
@@ -38,10 +39,12 @@ export SPRING_DATASOURCE_PASSWORD=postgres
 
 Build app:
 
-```bash
-make build
-java -jar build/libs/project-devops-deploy-0.0.1-SNAPSHOT.jar
-```
+    ```bash
+    make build
+    java -jar build/libs/project-devops-deploy-0.0.1-SNAPSHOT.jar
+    ```
+
+Options: `JAVA_OPTS` (ex. `JAVA_OPTS="-Xms256m -Xmx512m -Dspring.profiles.active=prod"`) can be setted via env vars.
 
 ### Useful commands
 
@@ -51,7 +54,7 @@ See [Makefile](./Makefile)
 
 ### Development
 
-1. Install Node.js 20 LTS (or newer) and npm 10.
+1. Install Node.js 24 LTS (or newer) and npm.
 2. Install dependencies and start the Vite dev server:
    ```bash
    cd frontend
@@ -81,3 +84,48 @@ See [Makefile](./Makefile)
    cp -R frontend/dist/* src/main/resources/static/
    ```
 3. Restart the backend (`make run`) and open `http://localhost:8080/` — the React app will now be served directly by the Java application.
+
+### Running in Docker
+
+Pass JVM flags via `JAVA_OPTS`:
+
+```bash
+docker run --rm -p 8080:8080 \
+  -e JAVA_OPTS="-Xms256m -Xmx512m -Dspring.profiles.active=prod" \
+  ...
+```
+
+Useful JVM options:
+- `-Xms/-Xmx` — set memory limits inside the container.
+- `-XX:+UseContainerSupport` / `-XX:ActiveProcessorCount` (these respect cgroup limits by default).
+- `-Dspring.profiles.active=prod` — switch the profile without recompiling.
+- `-Dlogging.level.root=INFO` or Spring environment variables (`SPRING_DATASOURCE_URL`, `STORAGE_S3_BUCKET`, etc.) — configure external services.
+
+## Image Upload Checks
+
+### Local (dev profile, H2 + temp storage)
+1. Start backend: `make run` (uses in-memory H2 and local filesystem storage under `/tmp/bulletin-images`).
+2. Start frontend dev server: `cd frontend && npm install && npm run dev`.
+3. In React Admin:
+   - Create a bulletin or edit an existing one.
+   - Use the “Upload image” field; after save, the image preview should load via the generated `imageUrl`.
+4. Verify backend log: look for `Stored image` entries or check `/tmp/bulletin-images` for a new file. Refresh the bulletin show page to ensure the presigned/local URL still renders.
+
+### Production / S3
+1. Export the required env vars before launching Spring Boot:
+   ```bash
+   export SPRING_PROFILES_ACTIVE=prod
+   export STORAGE_S3_BUCKET=your-bucket
+   export STORAGE_S3_REGION=eu-central-1
+   export STORAGE_S3_ACCESSKEY=...
+   export STORAGE_S3_SECRETKEY=...
+   export STORAGE_S3_ENDPOINT=https://s3.eu-central-1.amazonaws.com   # optional
+   export STORAGE_S3_CDNURL=https://cdn.example.com/bulletins          # optional
+   ```
+2. Deploy backend (e.g., `java -jar build/libs/project-devops-deploy-0.0.1-SNAPSHOT.jar`).
+3. In the frontend (local or deployed), upload an image for a bulletin.
+4. Confirm expected behavior:
+   - Response from `/api/files/upload` contains a non-empty `key`.
+   - Image shows up in bulletin show view (URL should either point to CDN or be a presigned S3 link).
+   - Object exists in S3 bucket (check via AWS console or `aws s3 ls s3://your-bucket/bulletins/...`).
+5. Optional: run `curl -I "$(curl -s .../api/files/view?key=... | jq -r .url)"` to ensure the presigned URL is valid from the production environment.
