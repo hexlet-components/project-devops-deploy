@@ -2,7 +2,11 @@ import {
   Create,
   Datagrid,
   Edit,
+  ImageField,
+  ImageInput,
   List,
+  NumberField,
+  NumberInput,
   SelectField,
   SelectInput,
   Show,
@@ -34,6 +38,17 @@ const BulletinForm = () => (
       validate={[required()]}
     />
     <TextInput source="contact" fullWidth validate={[required()]} />
+    <NumberInput
+      source="price"
+      label="Price"
+      min={0}
+      step={0.01}
+      validate={[required()]}
+    />
+    <ImageField source="imageUrl" label="Current image" />
+    <ImageInput source="image" label="Upload image" accept="image/*">
+      <ImageField source="src" title="title" />
+    </ImageInput>
   </SimpleForm>
 );
 
@@ -44,6 +59,7 @@ export const BulletinList = () => (
       <TextField source="title" />
       <SelectField source="state" choices={stateChoices} />
       <TextField source="contact" />
+      <NumberField source="price" label="Price" options={{ style: "currency", currency: "USD" }} />
     </Datagrid>
   </List>
 );
@@ -56,6 +72,12 @@ export const BulletinShow = () => (
       <TextField source="description" />
       <SelectField source="state" choices={stateChoices} />
       <TextField source="contact" />
+      <NumberField
+        source="price"
+        label="Price"
+        options={{ style: "currency", currency: "USD" }}
+      />
+      <ImageField source="imageUrl" label="Image" />
     </SimpleShowLayout>
   </Show>
 );

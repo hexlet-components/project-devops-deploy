@@ -60,6 +60,12 @@ See [Makefile](./Makefile)
    ```
 3. The dev server proxies `/api` requests to `http://localhost:8080`, so keep the backend running via `make run` (or `./gradlew bootRun`) in another terminal.
 
+### Image upload flow
+
+1. Upload files via `POST /api/files/upload` (multipart form field named `file`).
+2. The response contains `key` and a temporary `url`. Persist the `key` in the `imageKey` field when creating or updating bulletins; the backend stores only that identifier.
+3. When you need a fresh link, call `GET /api/files/view?key=...` to receive a new URL (the backend issues presigned links on demand).
+
 ### Build and serve from the Java app
 
 1. Build the production bundle:

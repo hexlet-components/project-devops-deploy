@@ -6,6 +6,7 @@ import {
 } from "react-admin";
 
 const apiUrl = import.meta.env.VITE_API_URL ?? "/api";
+const fileUploadUrl = `${apiUrl}/files/upload`;
 
 const httpClient = (url: string, options: fetchUtils.Options = {}) => {
   if (!options.headers) {
@@ -57,6 +58,44 @@ const paginate = (
   };
 };
 
+const uploadImage = async (file?: File) => {
+  if (!file) {
+    return undefined;
+  }
+
+  const formData = new FormData();
+  formData.append("file", file);
+  const { json } = await httpClient(fileUploadUrl, {
+    method: "POST",
+    body: formData,
+  });
+  return json as { key: string; url?: string };
+};
+
+const extractImageFile = (data: Record<string, any>) => {
+  const candidate = data?.image;
+  if (candidate?.rawFile instanceof File) {
+    return candidate.rawFile as File;
+  }
+  return undefined;
+};
+
+const preparePayload = async (data: Record<string, any>) => {
+  const payload = { ...data };
+  delete payload.image;
+  delete payload.imageUrl;
+
+  const rawFile = extractImageFile(data);
+  if (rawFile) {
+    const result = await uploadImage(rawFile);
+    if (result?.key) {
+      payload.imageKey = result.key;
+    }
+  }
+
+  return payload;
+};
+
 export const dataProvider: DataProvider = {
   getList: async (resource, params) => {
     const { json } = await httpClient(getCollectionUrl(resource));
@@ -87,17 +126,19 @@ export const dataProvider: DataProvider = {
   },
 
   create: async (resource, params) => {
+    const body = await preparePayload(params.data);
     const { json } = await httpClient(getCollectionUrl(resource), {
       method: "POST",
-      body: JSON.stringify(params.data),
+      body: JSON.stringify(body),
     });
     return { data: json };
   },
 
   update: async (resource, params) => {
+    const body = await preparePayload(params.data);
     const { json } = await httpClient(getRecordUrl(resource, params.id), {
       method: "PUT",
-      body: JSON.stringify(params.data),
+      body: JSON.stringify(body),
     });
     return { data: json };
   },
