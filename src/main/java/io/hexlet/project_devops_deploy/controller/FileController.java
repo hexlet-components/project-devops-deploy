@@ -4,7 +4,11 @@ import io.hexlet.project_devops_deploy.dto.FileUploadResponse;
 import io.hexlet.project_devops_deploy.exception.ResourceNotFoundException;
 import io.hexlet.project_devops_deploy.storage.ImageStorageService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,5 +39,22 @@ public class FileController {
                 .orElseThrow(() -> new ResourceNotFoundException("Image %s not found".formatted(key)));
 
         return FileUploadResponse.builder().key(key).url(url).build();
+    }
+
+    @GetMapping(value = "/raw", produces = MediaType.ALL_VALUE)
+    public ResponseEntity<Resource> raw(@RequestParam("key") String key) {
+        Resource resource = imageStorageService.load(key)
+                .orElseThrow(() -> new ResourceNotFoundException("Image %s not found".formatted(key)));
+
+        String contentType = MediaType.APPLICATION_OCTET_STREAM_VALUE;
+        try {
+            contentType = resource.getURL().openConnection().getContentType();
+        } catch (Exception ignored) {
+        }
+
+        return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType))
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                        "inline; filename=" + resource.getFilename())
+                .body(resource);
     }
 }
