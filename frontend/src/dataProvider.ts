@@ -1,9 +1,4 @@
-import {
-  type DataProvider,
-  fetchUtils,
-  type Identifier,
-  type GetListResult,
-} from "react-admin";
+import { type DataProvider, fetchUtils, type Identifier } from "react-admin";
 
 const apiUrl = import.meta.env.VITE_API_URL ?? "/api";
 const fileUploadUrl = `${apiUrl}/files/upload`;
@@ -24,39 +19,15 @@ const getCollectionUrl = (resource: string) => `${apiUrl}/${resource}`;
 const getRecordUrl = (resource: string, id: Identifier) =>
   `${getCollectionUrl(resource)}/${id}`;
 
-const sortData = (
-  data: any[],
-  field: string,
-  order: "ASC" | "DESC",
-): any[] => {
-  if (!field) {
-    return data;
-  }
-
-  return [...data].sort((a, b) => {
-    if (a[field] === b[field]) {
-      return 0;
-    }
-    if (a[field] > b[field]) {
-      return order === "ASC" ? 1 : -1;
-    }
-    return order === "ASC" ? -1 : 1;
-  });
+type JsonRecord = Record<string, unknown>;
+type MutablePayload = JsonRecord & {
+  image?: { rawFile?: unknown };
+  imageUrl?: string;
+  imageKey?: string;
 };
 
-const paginate = (
-  data: any[],
-  page: number,
-  perPage: number,
-): GetListResult<any> => {
-  const start = (page - 1) * perPage;
-  const end = start + perPage;
-
-  return {
-    data: data.slice(start, end),
-    total: data.length,
-  };
-};
+const normalizeCollection = (payload: unknown): JsonRecord[] =>
+  Array.isArray(payload) ? (payload as JsonRecord[]) : [];
 
 const uploadImage = async (file?: File) => {
   if (!file) {
@@ -72,20 +43,20 @@ const uploadImage = async (file?: File) => {
   return json as { key: string; url?: string };
 };
 
-const extractImageFile = (data: Record<string, any>) => {
+const extractImageFile = (data: MutablePayload) => {
   const candidate = data?.image;
   if (candidate?.rawFile instanceof File) {
-    return candidate.rawFile as File;
+    return candidate.rawFile;
   }
   return undefined;
 };
 
-const preparePayload = async (data: Record<string, any>) => {
-  const payload = { ...data };
+const preparePayload = async (data: JsonRecord) => {
+  const payload = { ...data } as MutablePayload;
   delete payload.image;
   delete payload.imageUrl;
 
-  const rawFile = extractImageFile(data);
+  const rawFile = extractImageFile(payload);
   if (rawFile) {
     const result = await uploadImage(rawFile);
     if (result?.key) {
@@ -98,9 +69,10 @@ const preparePayload = async (data: Record<string, any>) => {
 
 export const dataProvider: DataProvider = {
   getList: async (resource, params) => {
+    void params;
     const { json } = await httpClient(getCollectionUrl(resource));
-    const sorted = sortData(json, params.sort.field, params.sort.order);
-    return paginate(sorted, params.pagination.page, params.pagination.perPage);
+    const data = normalizeCollection(json);
+    return { data, total: data.length };
   },
 
   getOne: async (resource, params) => {
@@ -116,13 +88,10 @@ export const dataProvider: DataProvider = {
   },
 
   getManyReference: async (resource, params) => {
+    void params;
     const { json } = await httpClient(getCollectionUrl(resource));
-    const filtered = json.filter(
-      (record: Record<string, Identifier>) =>
-        record[params.target] === params.id,
-    );
-    const sorted = sortData(filtered, params.sort.field, params.sort.order);
-    return paginate(sorted, params.pagination.page, params.pagination.perPage);
+    const data = normalizeCollection(json);
+    return { data, total: data.length };
   },
 
   create: async (resource, params) => {

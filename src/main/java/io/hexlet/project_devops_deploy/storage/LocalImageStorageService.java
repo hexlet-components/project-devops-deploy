@@ -1,11 +1,11 @@
 package io.hexlet.project_devops_deploy.storage;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.core.io.Resource;
@@ -68,8 +68,8 @@ public class LocalImageStorageService implements ImageStorageService {
 
     private String buildPublicUrl(String key) {
         try {
-            return ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/files/raw")
-                    .queryParam("key", key).build(true).toUriString();
+            return ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/files/raw").queryParam("key", key)
+                    .build(true).toUriString();
         } catch (IllegalStateException e) {
             return "/api/files/raw?key=" + URLEncoder.encode(key, StandardCharsets.UTF_8);
         }

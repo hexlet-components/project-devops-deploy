@@ -1,4 +1,15 @@
 import {
+  Box,
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  CardHeader,
+  CircularProgress,
+  Stack,
+  Typography,
+} from "@mui/material";
+import {
   Create,
   Edit,
   ImageField,
@@ -6,6 +17,7 @@ import {
   List,
   NumberField,
   NumberInput,
+  required,
   SelectField,
   SelectInput,
   Show,
@@ -13,20 +25,8 @@ import {
   SimpleShowLayout,
   TextField,
   TextInput,
-  required,
   useListContext,
 } from "react-admin";
-import {
-  Box,
-  Card,
-  CardActions,
-  CardContent,
-  CardHeader,
-  Button,
-  Typography,
-  CircularProgress,
-  Stack,
-} from "@mui/material";
 import { Link } from "react-router-dom";
 
 const stateChoices = [
@@ -76,7 +76,10 @@ type BulletinRecord = {
 
 const formatPrice = (value?: number) =>
   typeof value === "number"
-    ? new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(value)
+    ? new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+      }).format(value)
     : "—";
 
 const BulletinGrid = () => {
@@ -137,7 +140,10 @@ const BulletinGrid = () => {
               />
             </Box>
           )}
-          <CardHeader title={record.title} subheader={formatPrice(record.price)} />
+          <CardHeader
+            title={record.title}
+            subheader={formatPrice(record.price)}
+          />
           <CardContent sx={{ flexGrow: 1 }}>
             <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
               {record.description?.slice(0, 140) ?? ""}{" "}
@@ -146,15 +152,27 @@ const BulletinGrid = () => {
             <Typography variant="caption" color="text.secondary">
               State: {record.state}
             </Typography>
-            <Typography variant="caption" color="text.secondary" display="block">
+            <Typography
+              variant="caption"
+              color="text.secondary"
+              display="block"
+            >
               Contact: {record.contact}
             </Typography>
           </CardContent>
           <CardActions>
-            <Button component={Link} to={`/bulletins/${record.id}/show`} size="small">
+            <Button
+              component={Link}
+              to={`/bulletins/${record.id}/show`}
+              size="small"
+            >
               View
             </Button>
-            <Button component={Link} to={`/bulletins/${record.id}`} size="small">
+            <Button
+              component={Link}
+              to={`/bulletins/${record.id}`}
+              size="small"
+            >
               Edit
             </Button>
           </CardActions>
@@ -188,6 +206,14 @@ export const BulletinShow = () => (
   </Show>
 );
 
-export const BulletinEdit = () => <Edit children={<BulletinForm />} />;
+export const BulletinEdit = () => (
+  <Edit>
+    <BulletinForm />
+  </Edit>
+);
 
-export const BulletinCreate = () => <Create children={<BulletinForm />} />;
+export const BulletinCreate = () => (
+  <Create>
+    <BulletinForm />
+  </Create>
+);

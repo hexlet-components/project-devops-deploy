@@ -53,8 +53,6 @@ public class FileController {
         }
 
         return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType))
-                .header(HttpHeaders.CONTENT_DISPOSITION,
-                        "inline; filename=" + resource.getFilename())
-                .body(resource);
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=" + resource.getFilename()).body(resource);
     }
 }
