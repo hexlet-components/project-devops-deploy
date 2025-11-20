@@ -26,8 +26,89 @@ type MutablePayload = JsonRecord & {
   imageKey?: string;
 };
 
-const normalizeCollection = (payload: unknown): JsonRecord[] =>
-  Array.isArray(payload) ? (payload as JsonRecord[]) : [];
+const asRecord = (payload: unknown): Record<string, unknown> | null =>
+  typeof payload === "object" && payload !== null
+    ? (payload as Record<string, unknown>)
+    : null;
+
+const extractCollection = (payload: unknown): JsonRecord[] => {
+  if (Array.isArray(payload)) {
+    return payload as JsonRecord[];
+  }
+
+  const record = asRecord(payload);
+  if (record && Array.isArray(record.data)) {
+    return record.data as JsonRecord[];
+  }
+
+  return [];
+};
+
+const extractTotal = (payload: unknown, fallback: number) => {
+  const record = asRecord(payload);
+  if (record && typeof record.total === "number") {
+    return record.total;
+  }
+
+  if (record && typeof record.total === "string") {
+    const parsed = Number(record.total);
+    if (Number.isFinite(parsed)) {
+      return parsed;
+    }
+  }
+
+  return fallback;
+};
+
+const readPagePayload = (
+  payload: unknown,
+): { data: JsonRecord[]; total: number } => {
+  const data = extractCollection(payload);
+  return { data, total: extractTotal(payload, data.length) };
+};
+
+const buildQueryString = (options: {
+  pagination?: { page: number; perPage: number };
+  sort?: { field: string; order?: "ASC" | "DESC" };
+  filter?: Record<string, unknown>;
+}) => {
+  const searchParams = new URLSearchParams();
+
+  if (options.pagination) {
+    const { page, perPage } = options.pagination;
+    if (page != null) {
+      searchParams.set("page", String(page));
+    }
+    if (perPage != null) {
+      searchParams.set("perPage", String(perPage));
+    }
+  }
+
+  if (options.sort?.field) {
+    searchParams.set("sort", options.sort.field);
+    if (options.sort.order) {
+      searchParams.set("order", options.sort.order);
+    }
+  }
+
+  Object.entries(options.filter ?? {}).forEach(([key, value]) => {
+    if (value === undefined || value === null || value === "") {
+      return;
+    }
+
+    if (Array.isArray(value)) {
+      value.forEach((entry) => {
+        searchParams.append(key, String(entry));
+      });
+      return;
+    }
+
+    searchParams.set(key, String(value));
+  });
+
+  const query = searchParams.toString();
+  return query.length ? `?${query}` : "";
+};
 
 const uploadImage = async (file?: File) => {
   if (!file) {
@@ -69,10 +150,13 @@ const preparePayload = async (data: JsonRecord) => {
 
 export const dataProvider: DataProvider = {
   getList: async (resource, params) => {
-    void params;
-    const { json } = await httpClient(getCollectionUrl(resource));
-    const data = normalizeCollection(json);
-    return { data, total: data.length };
+    const query = buildQueryString({
+      pagination: params.pagination,
+      sort: params.sort,
+      filter: params.filter,
+    });
+    const { json } = await httpClient(`${getCollectionUrl(resource)}${query}`);
+    return readPagePayload(json);
   },
 
   getOne: async (resource, params) => {
@@ -88,10 +172,14 @@ export const dataProvider: DataProvider = {
   },
 
   getManyReference: async (resource, params) => {
-    void params;
-    const { json } = await httpClient(getCollectionUrl(resource));
-    const data = normalizeCollection(json);
-    return { data, total: data.length };
+    const filter = { ...(params.filter ?? {}), [params.target]: params.id };
+    const query = buildQueryString({
+      pagination: params.pagination,
+      sort: params.sort,
+      filter,
+    });
+    const { json } = await httpClient(`${getCollectionUrl(resource)}${query}`);
+    return readPagePayload(json);
   },
 
   create: async (resource, params) => {

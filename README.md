@@ -24,7 +24,10 @@ API documentation is available via Swagger UI at `http://localhost:8080/swagger-
     ```
 3. Explore the API:
     - All bulletins: `GET http://localhost:8080/api/bulletins`
+    - Paginated + filtered: `GET http://localhost:8080/api/bulletins?page=1&perPage=9&sort=createdAt&order=DESC&state=PUBLISHED&search=laptop`
     - Swagger UI: `http://localhost:8080/swagger-ui/index.html`
+
+`/api/bulletins` accepts pagination (`page`, `perPage`), sorting (`sort`, `order`) and filters (`state`, `search`). Filters are processed via JPA Specifications so the same contract is available to the React Admin frontend.
 
 ### Production
 
