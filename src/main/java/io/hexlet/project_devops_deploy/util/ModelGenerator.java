@@ -36,6 +36,8 @@ public class ModelGenerator {
                 .supply(Select.field(Bulletin::getContact), () -> faker.phoneNumber().phoneNumber())
                 .supply(Select.field(Bulletin::getPrice),
                         () -> BigDecimal.valueOf(faker.number().randomDouble(2, 10, 10_000)))
+                .supply(Select.field(Bulletin::getImageKey),
+                        () -> "bulletins/%s.jpg".formatted(faker.internet().uuid()))
                 .toModel();
     }
 }
