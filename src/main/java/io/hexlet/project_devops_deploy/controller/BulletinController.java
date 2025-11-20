@@ -9,8 +9,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,13 +36,9 @@ public class BulletinController {
     }
 
     @GetMapping("/bulletins")
-    public PageResponse<BulletinDto> index(
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "9") int perPage,
-            @RequestParam(defaultValue = "createdAt") String sort,
-            @RequestParam(defaultValue = "DESC") Sort.Direction order,
-            @RequestParam Map<String, String> queryParams
-    ) {
+    public PageResponse<BulletinDto> index(@RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int perPage, @RequestParam(defaultValue = "createdAt") String sort,
+            @RequestParam(defaultValue = "DESC") Sort.Direction order, @RequestParam Map<String, String> queryParams) {
         Map<String, String> filters = new HashMap<>(queryParams);
         filters.keySet().removeAll(Set.of("page", "perPage", "sort", "order"));
         return service.findAll(page, perPage, sort, order, filters);

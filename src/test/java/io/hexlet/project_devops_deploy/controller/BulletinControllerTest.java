@@ -59,8 +59,8 @@ class BulletinControllerTest {
                 .andExpect(jsonPath("$.price", equalTo(price.intValue())))
                 .andExpect(jsonPath("$.imageKey", equalTo(imageKey)));
 
-        mockMvc.perform(get("/api/bulletins")).andExpect(status().isOk())
-                .andExpect(jsonPath("$.data", hasSize(1))).andExpect(jsonPath("$.total", equalTo(1)));
+        mockMvc.perform(get("/api/bulletins")).andExpect(status().isOk()).andExpect(jsonPath("$.data", hasSize(1)))
+                .andExpect(jsonPath("$.total", equalTo(1)));
     }
 
     @Test
@@ -68,8 +68,8 @@ class BulletinControllerTest {
         bulletinRepository.save(modelGenerator.generateBulletin());
         bulletinRepository.save(modelGenerator.generateBulletin());
 
-        mockMvc.perform(get("/api/bulletins")).andExpect(status().isOk())
-                .andExpect(jsonPath("$.data", hasSize(2))).andExpect(jsonPath("$.total", equalTo(2)));
+        mockMvc.perform(get("/api/bulletins")).andExpect(status().isOk()).andExpect(jsonPath("$.data", hasSize(2)))
+                .andExpect(jsonPath("$.total", equalTo(2)));
     }
 
     @Test

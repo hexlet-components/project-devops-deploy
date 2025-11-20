@@ -36,7 +36,8 @@ public class BulletinService {
     }
 
     @Transactional(readOnly = true)
-    public PageResponse<BulletinDto> findAll(int page, int perPage, String sort, Sort.Direction order, Map<String, String> filters) {
+    public PageResponse<BulletinDto> findAll(int page, int perPage, String sort, Sort.Direction order,
+            Map<String, String> filters) {
         int pageIndex = Math.max(page - 1, 0);
         int pageSize = Math.max(perPage, 1);
         String sortProperty = StringUtils.hasText(sort) ? sort : "createdAt";

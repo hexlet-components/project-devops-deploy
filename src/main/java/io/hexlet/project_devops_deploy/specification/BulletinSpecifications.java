@@ -20,7 +20,8 @@ public final class BulletinSpecifications {
 
         specification = combine(specification, byState(filters.get("state")));
         specification = combine(specification, byId(filters.get("id")));
-        specification = combine(specification, search(filters.containsKey("search") ? filters.get("search") : filters.get("q")));
+        specification = combine(specification,
+                search(filters.containsKey("search") ? filters.get("search") : filters.get("q")));
 
         return specification;
     }
@@ -57,17 +58,12 @@ public final class BulletinSpecifications {
         }
 
         String likePattern = "%" + term.trim().toLowerCase(Locale.US) + "%";
-        return (root, query, cb) -> cb.or(
-                cb.like(cb.lower(root.get("title")), likePattern),
+        return (root, query, cb) -> cb.or(cb.like(cb.lower(root.get("title")), likePattern),
                 cb.like(cb.lower(root.get("description")), likePattern),
-                cb.like(cb.lower(root.get("contact")), likePattern)
-        );
+                cb.like(cb.lower(root.get("contact")), likePattern));
     }
 
-    private static Specification<Bulletin> combine(
-            Specification<Bulletin> base,
-            Specification<Bulletin> addition
-    ) {
+    private static Specification<Bulletin> combine(Specification<Bulletin> base, Specification<Bulletin> addition) {
         if (addition == null) {
             return base;
         }
