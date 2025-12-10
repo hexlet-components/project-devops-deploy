@@ -32,3 +32,26 @@ spring:
 
 server:
   address: 0.0.0.0
+
+management:
+  server:
+    address: 0.0.0.0
+    port: ${MANAGEMENT_SERVER_PORT:9090}
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus,logfile
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      show-details: always
+  metrics:
+    tags:
+      application: ${spring.application.name}
+      environment: ${SPRING_PROFILES_ACTIVE:dev}
+    distribution:
+      percentiles-histogram:
+        http:
+          server:
+            requests: true
