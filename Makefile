@@ -1,3 +1,7 @@
+REPOSITORY := artemstepanenko
+NAME := bulletins
+VERSION := $(shell grep '^version = ' build.gradle.kts | sed 's/version = "\(.*\)"/\1/' | sed 's/-SNAPSHOT//')
+
 test:
 	./gradlew test
 
@@ -24,4 +28,13 @@ lint:
 lint-fix:
 	./gradlew spotlessApply
 
-.PHONY: build
+image:
+	docker build -t $(REPOSITORY)/$(NAME):$(VERSION) .
+
+container:
+	docker run --rm -p 8080:8080 $(REPOSITORY)/$(NAME):$(VERSION)
+
+publish:
+	docker push $(REPOSITORY)/$(NAME):$(VERSION)
+
+.PHONY: build image container publish
