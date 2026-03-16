@@ -1,6 +1,20 @@
 # Project DevOps Deploy
 
-Bulletin board service.
+Bulletin board service. Spring Boot backend with React Admin frontend.
+
+## Container
+
+```bash
+make image      # build Docker image (artemstepanenko/bulletins:<version>)
+make container  # run container on http://localhost:8080
+make publish    # push image to Docker Hub
+```
+
+Or directly:
+
+```bash
+docker run --rm -p 8080:8080 artemstepanenko/bulletins:0.0.1
+```
 
 > **Fork policy**: this upstream repository is read-only. We do not review or merge pull requests and we do not accept infrastructure changes (Dockerfiles, Ansible roles, CI/CD workflows, etc.). To experiment or extend the project, fork it and work inside your own repository.
 
