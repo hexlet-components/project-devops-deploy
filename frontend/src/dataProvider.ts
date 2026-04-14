@@ -20,10 +20,19 @@ const getRecordUrl = (resource: string, id: Identifier) =>
   `${getCollectionUrl(resource)}/${id}`;
 
 type JsonRecord = Record<string, unknown>;
+type ImageFieldValue = { rawFile?: unknown };
 type MutablePayload = JsonRecord & {
-  image?: { rawFile?: unknown };
+  image?: ImageFieldValue | ImageFieldValue[];
   imageUrl?: string;
   imageKey?: string;
+};
+
+const hasRawFile = (value: unknown): value is { rawFile: File } => {
+  if (typeof value !== "object" || value === null || !("rawFile" in value)) {
+    return false;
+  }
+
+  return (value as { rawFile?: unknown }).rawFile instanceof File;
 };
 
 const asRecord = (payload: unknown): Record<string, unknown> | null =>
@@ -126,18 +135,26 @@ const uploadImage = async (file?: File) => {
 
 const extractImageFile = (data: MutablePayload) => {
   const candidate = data?.image;
-  if (candidate?.rawFile instanceof File) {
+
+  if (Array.isArray(candidate)) {
+    const itemWithFile = candidate.find(hasRawFile);
+    return itemWithFile?.rawFile;
+  }
+
+  if (hasRawFile(candidate)) {
     return candidate.rawFile;
   }
+
   return undefined;
 };
 
 const preparePayload = async (data: JsonRecord) => {
   const payload = { ...data } as MutablePayload;
+  const rawFile = extractImageFile(payload);
+
   delete payload.image;
   delete payload.imageUrl;
 
-  const rawFile = extractImageFile(payload);
   if (rawFile) {
     const result = await uploadImage(rawFile);
     if (result?.key) {
