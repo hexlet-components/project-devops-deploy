@@ -22,24 +22,31 @@ import tools.jackson.databind.ObjectMapper;
 @AutoConfigureMockMvc
 class FileControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+    @Autowired private MockMvc mockMvc;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    @Autowired private ObjectMapper objectMapper;
 
     @Test
     void testUploadAndView() throws Exception {
-        MockMultipartFile file = new MockMultipartFile("file", "test-image.png", MediaType.IMAGE_PNG_VALUE,
-                "fake-image-content".getBytes());
+        MockMultipartFile file =
+                new MockMultipartFile(
+                        "file",
+                        "test-image.png",
+                        MediaType.IMAGE_PNG_VALUE,
+                        "fake-image-content".getBytes());
 
-        var uploadResult = mockMvc.perform(multipart("/api/files/upload").file(file)).andExpect(status().isCreated())
-                .andExpect(jsonPath("$.key", not(blankOrNullString()))).andReturn();
+        var uploadResult =
+                mockMvc.perform(multipart("/api/files/upload").file(file))
+                        .andExpect(status().isCreated())
+                        .andExpect(jsonPath("$.key", not(blankOrNullString())))
+                        .andReturn();
 
-        FileUploadResponse response = objectMapper.readValue(uploadResult.getResponse().getContentAsString(),
-                FileUploadResponse.class);
+        FileUploadResponse response =
+                objectMapper.readValue(
+                        uploadResult.getResponse().getContentAsString(), FileUploadResponse.class);
 
-        mockMvc.perform(get("/api/files/view").param("key", response.getKey())).andExpect(status().isOk())
+        mockMvc.perform(get("/api/files/view").param("key", response.getKey()))
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.key", equalTo(response.getKey())))
                 .andExpect(jsonPath("$.url", not(blankOrNullString())));
     }

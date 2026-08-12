@@ -29,17 +29,13 @@ import tools.jackson.databind.ObjectMapper;
 @AutoConfigureMockMvc
 class BulletinControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+    @Autowired private MockMvc mockMvc;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    @Autowired private ObjectMapper objectMapper;
 
-    @Autowired
-    private ModelGenerator modelGenerator;
+    @Autowired private ModelGenerator modelGenerator;
 
-    @Autowired
-    private BulletinRepository bulletinRepository;
+    @Autowired private BulletinRepository bulletinRepository;
 
     @BeforeEach
     void setup() {
@@ -50,16 +46,28 @@ class BulletinControllerTest {
     void testCreate() throws Exception {
         BigDecimal price = BigDecimal.valueOf(2500);
         String imageKey = "bulletins/create.png";
-        BulletinRequest request = buildRequest("Create title", "Create description", BulletinState.DRAFT,
-                "create@example.com", price, imageKey);
+        BulletinRequest request =
+                buildRequest(
+                        "Create title",
+                        "Create description",
+                        BulletinState.DRAFT,
+                        "create@example.com",
+                        price,
+                        imageKey);
 
-        mockMvc.perform(post("/api/bulletins").contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsBytes(request))).andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id", notNullValue())).andExpect(jsonPath("$.title", equalTo("Create title")))
+        mockMvc.perform(
+                        post("/api/bulletins")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsBytes(request)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id", notNullValue()))
+                .andExpect(jsonPath("$.title", equalTo("Create title")))
                 .andExpect(jsonPath("$.price", equalTo(price.intValue())))
                 .andExpect(jsonPath("$.imageKey", equalTo(imageKey)));
 
-        mockMvc.perform(get("/api/bulletins")).andExpect(status().isOk()).andExpect(jsonPath("$.data", hasSize(1)))
+        mockMvc.perform(get("/api/bulletins"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", hasSize(1)))
                 .andExpect(jsonPath("$.total", equalTo(1)));
     }
 
@@ -68,7 +76,9 @@ class BulletinControllerTest {
         bulletinRepository.save(modelGenerator.generateBulletin());
         bulletinRepository.save(modelGenerator.generateBulletin());
 
-        mockMvc.perform(get("/api/bulletins")).andExpect(status().isOk()).andExpect(jsonPath("$.data", hasSize(2)))
+        mockMvc.perform(get("/api/bulletins"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", hasSize(2)))
                 .andExpect(jsonPath("$.total", equalTo(2)));
     }
 
@@ -76,7 +86,8 @@ class BulletinControllerTest {
     void testShow() throws Exception {
         var bulletin = bulletinRepository.save(modelGenerator.generateBulletin());
 
-        mockMvc.perform(get("/api/bulletins/" + bulletin.getId())).andExpect(status().isOk())
+        mockMvc.perform(get("/api/bulletins/" + bulletin.getId()))
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", equalTo(bulletin.getId().intValue())))
                 .andExpect(jsonPath("$.title", equalTo(bulletin.getTitle())))
                 .andExpect(jsonPath("$.price", closeTo(bulletin.getPrice().doubleValue(), 0.001)))
@@ -89,11 +100,20 @@ class BulletinControllerTest {
 
         BigDecimal updatedPrice = BigDecimal.valueOf(9999);
         String imageKey = "bulletins/updated.png";
-        BulletinRequest request = buildRequest("Updated title", "Updated description", BulletinState.PUBLISHED,
-                "updated@example.com", updatedPrice, imageKey);
+        BulletinRequest request =
+                buildRequest(
+                        "Updated title",
+                        "Updated description",
+                        BulletinState.PUBLISHED,
+                        "updated@example.com",
+                        updatedPrice,
+                        imageKey);
 
-        mockMvc.perform(put("/api/bulletins/" + bulletin.getId()).contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsBytes(request))).andExpect(status().isOk())
+        mockMvc.perform(
+                        put("/api/bulletins/" + bulletin.getId())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsBytes(request)))
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title", equalTo("Updated title")))
                 .andExpect(jsonPath("$.state", equalTo("PUBLISHED")))
                 .andExpect(jsonPath("$.price", equalTo(updatedPrice.intValue())))
@@ -104,13 +124,25 @@ class BulletinControllerTest {
     void testDelete() throws Exception {
         var bulletin = bulletinRepository.save(modelGenerator.generateBulletin());
 
-        mockMvc.perform(delete("/api/bulletins/" + bulletin.getId())).andExpect(status().isNoContent());
+        mockMvc.perform(delete("/api/bulletins/" + bulletin.getId()))
+                .andExpect(status().isNoContent());
         mockMvc.perform(get("/api/bulletins/" + bulletin.getId())).andExpect(status().isNotFound());
     }
 
-    private BulletinRequest buildRequest(String title, String description, BulletinState state, String contact,
-            BigDecimal price, String imageKey) {
-        return BulletinRequest.builder().title(title).description(description).state(state).contact(contact)
-                .price(price).imageKey(imageKey).build();
+    private BulletinRequest buildRequest(
+            String title,
+            String description,
+            BulletinState state,
+            String contact,
+            BigDecimal price,
+            String imageKey) {
+        return BulletinRequest.builder()
+                .title(title)
+                .description(description)
+                .state(state)
+                .contact(contact)
+                .price(price)
+                .imageKey(imageKey)
+                .build();
     }
 }
