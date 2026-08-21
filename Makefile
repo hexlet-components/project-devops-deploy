@@ -10,7 +10,7 @@ update-gradle:
 	./gradlew wrapper --gradle-version 9.2.1
 
 update-deps:
-	./gradlew refreshVersions
+	./gradlew versionCatalogUpdate
 
 install:
 	./gradlew dependencies
