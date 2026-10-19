@@ -39,7 +39,7 @@ All other variables supported by Spring Boot can be overridden the same way; che
 
 ## Requirements
 
-- JDK 21+.
+- JDK 27
 - Gradle 9.2.1.
 - PostgreSQL only if you run the `prod` profile with an external database.
 - Make.
